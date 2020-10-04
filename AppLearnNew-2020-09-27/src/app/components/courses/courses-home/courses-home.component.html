@@ -1,0 +1,48 @@
+
+<div>
+      
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtro">
+    </mat-form-field>
+    <button mat-raised-button color="accent" class="add_product" (click)="openDialog()">Agregar Curso</button>
+
+    <div class="mat-elevation-z8 product_table">
+      <table mat-table [dataSource]="dataSource">
+        <!-- name Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let course"> {{course.description}} </td>
+        </ng-container>
+
+        <!-- description Column -->
+        <ng-container matColumnDef="schedule">
+          <th mat-header-cell *matHeaderCellDef>Horario del Curso</th>
+          <td mat-cell *matCellDef="let course"> {{course.schedule}} </td>
+        </ng-container>
+
+        <!-- price Column -->
+        <ng-container matColumnDef="teacher">
+          <th mat-header-cell *matHeaderCellDef>Profesor</th>
+          <td mat-cell *matCellDef="let course"> {{course.teacher}} </td>
+        </ng-container>
+
+        <!-- price Column -->
+        <ng-container matColumnDef="student">
+        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+        <td mat-cell *matCellDef="let course"> {{course.student}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="admin">
+          <th mat-header-cell *matHeaderCellDef>Admin</th>
+          <td mat-cell *matCellDef="let course"> <button class="btn_edit" mat-raised-button color="primary"  (click)="openUpdateDialog(course)">Editar
+            </button>
+            <button class="btn_delete" (click)="onDeleteCourse(course)" mat-raised-button color="warn">Borrar</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+  </div>
