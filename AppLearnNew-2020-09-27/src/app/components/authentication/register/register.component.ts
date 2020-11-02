@@ -13,10 +13,8 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 })
 export class RegisterComponent implements OnInit {
   user: User = new User();
-  userType = "student";
   email: string;
   password: string;
-  registerStudentForm: FormGroup;
   registerAdminForm: FormGroup;
   validation_messages = {
     displayName: [
@@ -50,28 +48,6 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     public formBuilder: FormBuilder,
   ) {
-    this.registerStudentForm = this.formBuilder.group({
-      displayName: new FormControl('', Validators.compose([
-        Validators.required,
-      ])),
-      email: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
-      ])),
-      password: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.minLength(5),
-      ])),
-      phone: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.minLength(8),
-        // Validators.pattern('/^-?(0|[1-9]\d*)?$/'),
-      ])),
-      instituteId: new FormControl('', Validators.compose([
-        Validators.required,
-      ])),
-      
-    });
     this.registerAdminForm = this.formBuilder.group({
       displayName: new FormControl('', Validators.compose([
         Validators.required,
@@ -99,34 +75,33 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  setUserType(){
-  this.userType = "admin";
-  console.log(this.userType);
-}
-
-
   async onRegister() {
-    (this.userType == 'student') ? console.log(this.registerStudentForm.value) : console.log(this.registerAdminForm.value); //to print test
+    // (this.userType == 'student') ? console.log(this.registerStudentForm.value) : console.log(this.registerAdminForm.value); //to print test
     const value = {};
-    (this.userType == 'student') ? value['email'] = this.registerStudentForm.get('email').value 
-    : value['email'] = this.registerAdminForm.get('email').value;
-    (this.userType == 'student') ? value['password'] = this.registerStudentForm.get('password').value 
-    : value['password'] = this.registerAdminForm.get('password').value;
+    value['email'] = this.registerAdminForm.get('email').value;
+    value['password'] = this.registerAdminForm.get('password').value;
     this.authService.registerUser(value).then(res => {
       this.user.email = res.user.email;
       this.user.uid = res.user.uid;
-      this.user.role = this.userType;
-      (this.userType == 'student') ? this.user.displayName = this.registerStudentForm.get('displayName').value
-      : this.user.displayName = this.registerAdminForm.get('displayName').value;
-      (this.userType == 'student') ? this.user.phone = this.registerStudentForm.get('phone').value
-      : this.user.phone = this.registerAdminForm.get('phone').value;
-      (this.userType == 'student') ? this.user.instituteId = this.registerStudentForm.get('instituteId').value
-      :this.user.instituteId = res.user.uid;
-      (this.userType == 'student') ? this.user.institute = " "
-      :this.user.institute = this.registerAdminForm.get('institute').value;
-      localStorage.setItem('user',JSON.stringify(this.user));
-      this.createUser(this.user);
+      this.user.role = 'admin';
+      this.user.displayName = this.registerAdminForm.get('displayName').value;
+      this.user.phone = this.registerAdminForm.get('phone').value;
+      this.user.institute = this.registerAdminForm.get('institute').value;
+      this.createInstitute();
     }, (error) => {
+      console.log(error);
+    });
+  }
+
+  createInstitute() {
+    const institute = {};
+    institute['name'] = this.user.institute,
+    this.authService.createInstitute(institute).then((resp: any) => {
+      console.log(resp);
+      this.user.instituteId = resp.id;
+      localStorage.setItem('user', JSON.stringify(this.user));
+      this.createUser(this.user);
+    }).catch(error => {
       console.log(error);
     });
   }
@@ -139,7 +114,6 @@ export class RegisterComponent implements OnInit {
     record['role'] = user.role;
     record['phone'] = user.phone;
     record['instituteId'] = user.instituteId;
-    record['institute'] = user.institute;
     this.authService.createUser(record).then(resp => {
       this.router.navigateByUrl('/');
     }).catch(error => {

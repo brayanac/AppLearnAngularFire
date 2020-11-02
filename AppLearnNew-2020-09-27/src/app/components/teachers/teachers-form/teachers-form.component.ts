@@ -44,6 +44,7 @@ export class TeachersFormComponent implements OnInit {
         record['displayName'] = addFormTeacher.form.value.displayName;
         record['email'] = addFormTeacher.form.value.email;
         record['phone'] = addFormTeacher.form.value.phone;
+        record['role'] = 'teacher';
         record['instituteId'] = userAuth.instituteId;
         this.teachersService.createTeacher(record).then((teacher) => {
           addFormTeacher.reset();

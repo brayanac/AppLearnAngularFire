@@ -10,7 +10,7 @@ import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 
 @Injectable({
   providedIn: 'root',
-  
+
 })
 export class AuthService {
   public isWsAvailable: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -19,7 +19,7 @@ export class AuthService {
   private isTeacher = false;
   private isStudent = false;
   constructor(public afAuth: AngularFireAuth,
-   // private storage: StorageService,
+    // private storage: StorageService,
     private router: Router, private afs: AngularFirestore) {
     this.usersCollection = afs.collection<User>('users');
     this.users = this.usersCollection.valueChanges();
@@ -42,8 +42,16 @@ export class AuthService {
     });
   }
 
+  createInstitute(record) {
+    return this.afs.collection('institutes').add(record);
+  }
+
   createUser(record) {
     return this.afs.collection('users').doc(record.uid).set(record);
+  }
+
+  getInstitute(instituteUid) {
+    return this.afs.collection('institutes').doc(instituteUid).get();
   }
 
   getUser(email) {
@@ -83,7 +91,7 @@ export class AuthService {
         };
       });
     });
-  return this.isAdmininistrator;
+    return this.isAdmininistrator;
   }
 
   async isTeach(): Promise<boolean> {
@@ -99,9 +107,9 @@ export class AuthService {
         };
       });
     });
-  return this.isTeacher;
+    return this.isTeacher;
   }
-  
+
   async isStud(): Promise<boolean> {
     this.afAuth.authState.subscribe((user) => {
       this.getUserByUid(user.uid).subscribe((user) => {
@@ -115,14 +123,14 @@ export class AuthService {
         };
       });
     });
-  return this.isStudent;
+    return this.isStudent;
   }
 
   async getCurrentUser() {
-    this.afAuth.authState.subscribe((authUser)=>{
-      this.getUserByUid(authUser.uid).subscribe((FSuser)=>{
-         this.currentUser  = FSuser; 
-         return this.currentUser;
+    this.afAuth.authState.subscribe((authUser) => {
+      this.getUserByUid(authUser.uid).subscribe((FSuser) => {
+        this.currentUser = FSuser;
+        return this.currentUser;
       })
     }
     )
@@ -134,23 +142,23 @@ export class AuthService {
     return this.afAuth.sendPasswordResetEmail(email);
   }
 
-   getUserByUid(userId: string){
-     this.userDoc = this.afs.doc<User>(`users/${userId}`);
-     return this.user = this.userDoc.snapshotChanges().pipe(map(action=>{
-       if (action.payload.exists == false){
-         return null;
-       } else{
-         const data = action.payload.data() as User;
-         data.uid = action.payload.id;
-         return data;
-       }
-     }));
-   }
-   async resetPassword(email: string): Promise<void>{
-    try{
+  getUserByUid(userId: string) {
+    this.userDoc = this.afs.doc<User>(`users/${userId}`);
+    return this.user = this.userDoc.snapshotChanges().pipe(map(action => {
+      if (action.payload.exists == false) {
+        return null;
+      } else {
+        const data = action.payload.data() as User;
+        data.uid = action.payload.id;
+        return data;
+      }
+    }));
+  }
+  async resetPassword(email: string): Promise<void> {
+    try {
       return this.afAuth.sendPasswordResetEmail(email);
-    }catch(error){
+    } catch (error) {
       console.log(error);
-    } 
+    }
   }
 }

@@ -8,9 +8,9 @@ import { map, shareReplay } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from "@angular/material/table";
-import {MatDialogModule, MatDialog} from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CoursesFormComponent } from '../courses-form/courses-form.component';
-import {User} from '../../../models/user.class';
+import { User } from '../../../models/user.class';
 
 @Component({
   selector: 'app-courses-home',
@@ -28,8 +28,8 @@ export class CoursesHomeComponent implements OnInit {
     public coursesService: CoursesService,
     public dialog: MatDialog,
     public router: Router,
-  ) {this.getCourses(); }
-  displayedColumns: string[] = ['description', 'schedule', 'teacher', 'student', 'admin' ];
+  ) { this.getCourses(); }
+  displayedColumns: string[] = ['description', 'schedule', 'teacher', 'student', 'admin'];
   dataSource = new MatTableDataSource();
 
   applyFilter(filterValue: string) {
@@ -57,8 +57,8 @@ export class CoursesHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.getCurrentUser();
-   this.getCourses();
+    // this.getCurrentUser();
+    this.getCourses();
   }
 
   navigate(url, event) {
@@ -68,8 +68,9 @@ export class CoursesHomeComponent implements OnInit {
     this.router.navigate([`${url}`])
   }
 
-  getCourses(){
-    this.coursesService.getCourses().subscribe(courses => {
+  getCourses() {
+    var userAuth = JSON.parse(localStorage.getItem('user'));
+    this.coursesService.getCourses(userAuth.instituteId).subscribe(courses => {
       this.course = courses;
       let studentMap;
       studentMap = courses.map(e => {
@@ -93,4 +94,4 @@ export class CoursesHomeComponent implements OnInit {
       this.coursesService.deleteCourse(course.uid);
     }
   }
-  }
+}

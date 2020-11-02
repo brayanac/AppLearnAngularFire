@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
 export class NavbarComponent implements OnInit {
 
   constructor(private authService: AuthService, private afsAuth: AngularFireAuth, private router: Router) { }
-  public app_name: string='AppLearn';
+  public app_name;
   public isLogged: boolean=false
   public isAdmin: any = false;
   public isStudent: any = false;
@@ -21,6 +21,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.getCurrentUser();
    // this.getAdminUser();
+   this.getUser();
   }
 
   getCurrentUser() {
@@ -49,6 +50,12 @@ export class NavbarComponent implements OnInit {
         this.isLogged = false;
       }
     });
+  }
+
+  getUser() {
+    var userAuth = JSON.parse(localStorage.getItem('user'));
+      console.log(userAuth);
+      this.app_name = userAuth.institute
   }
 
   onLogout(){
