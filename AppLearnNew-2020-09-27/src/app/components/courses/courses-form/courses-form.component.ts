@@ -8,8 +8,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {MatDialogModule, MatDialog} from '@angular/material/dialog';
-import {AngularFireStorage} from "@angular/fire/storage";
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { AngularFireStorage } from "@angular/fire/storage";
 
 @Component({
   selector: 'app-courses-form',
@@ -41,18 +41,19 @@ export class CoursesFormComponent implements OnInit {
   async addCourse(addFormCourse: NgForm) {
     if (this.dataDialog == null) {
       console.log(addFormCourse.form.value);
-    
-        const record = {};
-        record['description'] = addFormCourse.form.value.description;
-        record['schedule'] = addFormCourse.form.value.schedule;
-        record['teacher'] = addFormCourse.form.value.teacher;
-        record['student'] = addFormCourse.form.value.student;
-        this.coursesService.createCourse(record).then((student) => {
-          addFormCourse.reset();
-          this.dialog.closeAll();
-        }, (error) => {
-          console.log(error);     
-        });
+      var userAuth = JSON.parse(localStorage.getItem('user'));
+      const record = {};
+      record['description'] = addFormCourse.form.value.description;
+      record['schedule'] = addFormCourse.form.value.schedule;
+      record['teacher'] = addFormCourse.form.value.teacher;
+      record['student'] = addFormCourse.form.value.student;
+      record['instituteId'] = userAuth.instituteId;
+      this.coursesService.createCourse(record).then((student) => {
+        addFormCourse.reset();
+        this.dialog.closeAll();
+      }, (error) => {
+        console.log(error);
+      });
     } else {
       console.log(addFormCourse.form.value);
       const record = {};
@@ -65,12 +66,12 @@ export class CoursesFormComponent implements OnInit {
         addFormCourse.reset();
         this.dialog.closeAll();
       }, (error) => {
-        console.log(error);     
+        console.log(error);
       });
     }
   };
 
-  onClose(formCourse:NgForm): void {
+  onClose(formCourse: NgForm): void {
     formCourse.reset();
     this.dialogRef.close();
   }

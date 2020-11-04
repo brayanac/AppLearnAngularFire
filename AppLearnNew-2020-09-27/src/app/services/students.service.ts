@@ -32,8 +32,8 @@ export class StudentsService {
 
 
 
-  getStudents(){
-    return this.usersCollection.snapshotChanges();
+  getStudents(instituteId){
+    return this.afs.collection('users',  ref => ref.where('instituteId','==', instituteId)).snapshotChanges();
   }
 
   getStudent(studentId: string){

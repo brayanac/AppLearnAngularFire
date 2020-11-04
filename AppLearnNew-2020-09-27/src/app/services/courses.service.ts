@@ -30,8 +30,8 @@ export class CoursesService {
 
 
 
-    getCourses(){
-      return this.afs.collection('courses').snapshotChanges();
+    getCourses(instituteId){
+      return this.afs.collection('courses',  ref => ref.where('instituteId','==', instituteId)).snapshotChanges();
     }
   
     getCourse(courseId: string){

@@ -44,6 +44,7 @@ export class StudentsFormComponent implements OnInit {
         const record = {};
         record['displayName'] = addFormStudent.form.value.displayName;
         record['email'] = addFormStudent.form.value.email;
+        record['role'] = 'student'
         record['phone'] = addFormStudent.form.value.phone;
         record['instituteId'] = userAuth.instituteId;
         this.studentsService.createStudent(record).then((student) => {
@@ -74,7 +75,4 @@ export class StudentsFormComponent implements OnInit {
     formStudent.reset();
     this.dialogRef.close();
   }
-
-
-
 }

@@ -8,7 +8,7 @@
     <ul class="navbar-nav mr-auto">
 
         <span fxFlex></span>
-    <a mat-button class="nav-link " routerLink="/">AppLearn</a>
+    <a mat-button class="nav-link " routerLink="/">{{app_name}}</a>
    
     <li class="nav-item active">
     <a mat-button class="nav-link " routerLink="authentication/register" *ngIf="!isLogged"  >Registro</a>
@@ -20,16 +20,16 @@
     </li>
       <a mat-button class="nav-link " routerLink="/home" *ngIf="isLogged">Inicio</a>
     <li class="nav-item active">
-    <a mat-button class="nav-link " routerLink="/students" *ngIf="isAdmin">Alumnos</a>
+    <a mat-button class="nav-link " routerLink="/students" *ngIf="isAdmin && isLogged">Alumnos</a>
   </li>
     <li class="nav-item active">      
-      <a mat-button class="nav-link " routerLink="/courses" *ngIf="isAdmin">Cursos</a>
+      <a mat-button class="nav-link " routerLink="/courses" *ngIf="isAdmin && isLogged">Cursos</a>
     </li>
     <li class="nav-item active">      
-      <a mat-button class="nav-link " routerLink="/mycourses" *ngIf="isStudent">Mis Cursos</a>
+      <a mat-button class="nav-link " routerLink="/mycourses" *ngIf="isStudent && isLogged">Mis Cursos</a>
     </li>
     <li class="nav-item active"> 
-      <a mat-button class="nav-link " routerLink="/teachers" *ngIf="isAdmin">Docentes</a>
+      <a mat-button class="nav-link " routerLink="/teachers" *ngIf="isAdmin && isLogged">Docentes</a>
     </li>
       <li class="nav-item active"> 
     <a mat-button class="nav-link " routerLink="/forgot-password" *ngIf="isLogged">Ajustes</a>

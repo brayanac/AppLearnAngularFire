@@ -79,10 +79,11 @@ export class TeachersHomeComponent implements OnInit {
           displayName: e.payload.doc.data()['displayName'],
           email: e.payload.doc.data()['email'],
           instituteId: e.payload.doc.data()['instituteId'],
+          role: e.payload.doc.data()['role'],
           phone: e.payload.doc.data()['phone']
         }
       });
-      this.dataSource.data = teacherMap;
+      this.dataSource.data = teacherMap.filter(e => e.role == 'teacher');
       console.log(this.dataSource.data);
     });
   }

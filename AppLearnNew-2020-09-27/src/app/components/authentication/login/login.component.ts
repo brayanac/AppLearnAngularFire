@@ -90,13 +90,20 @@ export class LoginComponent implements OnInit, OnDestroy {
         user['role'] = person[0].role;
         user['instituteId'] = person[0].instituteId;
         user['phone'] = person[0].phone;
-        console.log(user);
-        localStorage.setItem('user',JSON.stringify(user));
-        console.log(JSON.parse(localStorage.getItem('user')));
-        this.router.navigateByUrl('/');
+        this.getInstitute(user);
       }, (error) => {
         console.log(error);
       });
+  }
+
+  getInstitute(user) {
+    this.authService.getInstitute(user['instituteId']).subscribe((result: any) => {
+      user['institute'] = result.Vd.Xe.proto.mapValue.fields.name['stringValue'];
+      localStorage.setItem('user',JSON.stringify(user));
+      this.router.navigateByUrl('/');
+    }, (error) => {
+      console.log(error);
+    });
   }
 
 

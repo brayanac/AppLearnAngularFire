@@ -69,19 +69,22 @@ export class StudentsHomeComponent implements OnInit {
   }
 
   getStudents(){
-    this.studentsService.getStudents().subscribe(students => {
+    var userAuth = JSON.parse(localStorage.getItem('user'));
+    console.log(userAuth.instituteId);
+    this.studentsService.getStudents(userAuth.instituteId).subscribe(students => {
       this.students = students;
       let studentMap;
       studentMap = students.map(e => {
-        return {
-          uid: e.payload.doc.id,
-          displayName: e.payload.doc.data()['displayName'],
-          email: e.payload.doc.data()['email'],
-          instituteId: e.payload.doc.data()['instituteId'],
-          phone: e.payload.doc.data()['phone']
-        }
+          return {
+            uid: e.payload.doc.id,
+            displayName: e.payload.doc.data()['displayName'],
+            email: e.payload.doc.data()['email'],
+            instituteId: e.payload.doc.data()['instituteId'],
+            role: e.payload.doc.data()['role'],
+            phone: e.payload.doc.data()['phone']
+          }
       });
-      this.dataSource.data = studentMap;
+      this.dataSource.data = studentMap.filter(e => e.role == 'student');
       console.log(this.dataSource.data);
     });
   }
